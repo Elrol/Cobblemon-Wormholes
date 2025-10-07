@@ -1,1 +1,1 @@
-# Cobblemon-Wormhols
+# Cobblemon-Wormholes
