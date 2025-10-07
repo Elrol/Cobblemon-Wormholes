@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "cobblemon_wormholes",
+  "version": "${version}",
+  "name": "Cobblemon Wormholes",
+  "description": "",
+  "authors": [
+    "Elrol"
+  ],
+  "license": "MIT License",
+  "entrypoints": {
+    "main": [
+      "dev.elrol.wormholes.Wormholes"
+    ]
+  },
+  "depends": {
+    "minecraft": "1.21.1",
+    "cobblemon": ">=1.6.0"
+  },
+  "mixins": []
+}
