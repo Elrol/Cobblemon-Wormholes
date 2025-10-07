@@ -1,7 +1,6 @@
 package dev.elrol.wormholes.libs;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import dev.elrol.wormholes.Wormholes;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
@@ -18,17 +17,7 @@ public class JsonUtils {
         File file = new File(dir, name);
 
         if(dir.mkdirs()) {
-            Wormholes.debug(dir + " directory for ArrowCore created. If this happens more than once, there is an issue.");
-        }
-
-        if(!file.exists()) {
-            try {
-                if(file.createNewFile()) {
-                    Wormholes.debug("New File " + name + " created.");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Wormholes.debug("Directory created: {}", dir);
         }
 
         try(FileWriter writer = new FileWriter(file)) {
@@ -45,22 +34,23 @@ public class JsonUtils {
     @SuppressWarnings("unchecked")
     public static <T> T loadFromJson(File dir, String name, T defaultObject) {
         File file = new File(dir, name);
-        
+
         if(file.exists()) {
-            try(FileReader reader = new FileReader(file)) {
+            try (FileReader reader = new FileReader(file)) {
                 Gson GSON = WormholeConstants.makeGSON();
                 T obj = GSON.fromJson(reader, (Class<T>) defaultObject.getClass());
 
-                if(obj != null) {
+                if (obj != null) {
                     Wormholes.debug("Loaded File " + name);
                     return obj;
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            saveToJson(dir, name, defaultObject);
         }
 
-        saveToJson(dir, name, defaultObject);
         return defaultObject;
 
     }

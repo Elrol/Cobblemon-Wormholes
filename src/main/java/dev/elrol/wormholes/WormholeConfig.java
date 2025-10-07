@@ -13,11 +13,13 @@ import dev.elrol.wormholes.libs.WormholeConstants;
 public class WormholeConfig {
 
     public static final Codec<WormholeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.BOOL.fieldOf("isDebug").forGetter(data -> data.isDebug)
-    ).apply(instance, (isDebug) -> {
+            Codec.BOOL.fieldOf("isDebug").forGetter(data -> data.isDebug),
+            DimensionConfig.CODEC.fieldOf("dimensions").forGetter(data -> data.dimensions)
+    ).apply(instance, (isDebug, dimension) -> {
         WormholeConfig data = new WormholeConfig();
 
         data.isDebug = isDebug;
+        data.dimensions = dimension;
 
         return data;
     }));
@@ -25,6 +27,9 @@ public class WormholeConfig {
     private static final String fileName = "config.json";
 
     public boolean isDebug = false;
+
+    public DimensionConfig dimensions = new DimensionConfig();
+
 
     public void save() {
         DataResult<JsonElement> jsonResult = CODEC.encodeStart(JsonOps.INSTANCE, this);
@@ -42,6 +47,29 @@ public class WormholeConfig {
         }
 
         return configPair.getOrThrow().getFirst();
+    }
+
+    public static class DimensionConfig {
+
+        public static final Codec<DimensionConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("chunksBetweenCells").forGetter(DimensionConfig::getChunksBetweenCells),
+                Codec.INT.fieldOf("cellSize").forGetter(DimensionConfig::getCellSize),
+                Codec.INT.fieldOf("cellElevation").forGetter(DimensionConfig::getCellElevation)
+        ).apply(instance, (chunksBetweenCells, cellSize, cellElevation) -> {
+            DimensionConfig data = new DimensionConfig();
+            data.chunksBetweenCells = chunksBetweenCells;
+            data.cellSize = cellSize;
+            data.cellElevation = cellElevation;
+            return data;
+        }));
+
+        private int chunksBetweenCells = 8;
+        private int cellSize = 200;
+        private int cellElevation = 64;
+
+        public int getChunksBetweenCells() { return chunksBetweenCells; }
+        public int getCellSize() { return cellSize; }
+        public int getCellElevation() { return cellElevation; }
     }
 
 }
