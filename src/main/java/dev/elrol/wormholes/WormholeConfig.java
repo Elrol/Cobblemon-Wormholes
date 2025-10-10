@@ -14,11 +14,13 @@ public class WormholeConfig {
 
     public static final Codec<WormholeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.BOOL.fieldOf("isDebug").forGetter(data -> data.isDebug),
+            Codec.FLOAT.fieldOf("wormholeScale").forGetter(data -> data.wormholeScale),
             DimensionConfig.CODEC.fieldOf("dimensions").forGetter(data -> data.dimensions)
-    ).apply(instance, (isDebug, dimension) -> {
+    ).apply(instance, (isDebug, wormholeScale, dimension) -> {
         WormholeConfig data = new WormholeConfig();
 
         data.isDebug = isDebug;
+        data.wormholeScale = wormholeScale;
         data.dimensions = dimension;
 
         return data;
@@ -27,6 +29,7 @@ public class WormholeConfig {
     private static final String fileName = "config.json";
 
     public boolean isDebug = false;
+    public float wormholeScale = 5.0f;
 
     public DimensionConfig dimensions = new DimensionConfig();
 

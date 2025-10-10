@@ -11,6 +11,9 @@
   "entrypoints": {
     "main": [
       "dev.elrol.wormholes.Wormholes"
+    ],
+    "client": [
+      "dev.elrol.wormholes.WormholeClient"
     ]
   },
   "depends": {

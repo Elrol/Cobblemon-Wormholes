@@ -2,45 +2,66 @@ package dev.elrol.wormholes.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.fabric.FabricAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import dev.elrol.wormholes.Wormholes;
+import dev.elrol.wormholes.libs.DimensionUtils;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+
+import java.io.File;
 
 
 public class CellData {
 
     public static final Codec<CellData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        Codec.STRING.fieldOf("cellID").forGetter(CellData::getCellID),
         BlockPos.CODEC.fieldOf("cellOffset").forGetter(CellData::getCellOffset),
-        Identifier.CODEC.fieldOf("schematic").forGetter(CellData::getSchematic)
-    ).apply(instance, (cellOffset, schematic) -> {
-        CellData data = new CellData();
+        BlockPos.CODEC.fieldOf("spawnOffset").forGetter(CellData::getSpawnOffset),
+        Codec.STRING.fieldOf("schematic").forGetter(data -> data.getSchematic().toString())
+    ).apply(instance, (cellID, cellOffset, spawnOffset, schematic) -> {
+        CellData data = new CellData(cellID, new File(schematic));
         data.cellOffset = cellOffset;
-        data.schematic = schematic;
+        data.spawnOffset = spawnOffset;
         return data;
     }));
 
-    public static final CellData EMPTY = new CellData();
-
+    final String cellID;
     BlockPos cellOffset = new BlockPos(0,0,0);
-    Identifier schematic;
+    BlockPos spawnOffset = new BlockPos(0,0,0);
+    File schematic;
 
-    public CellData() {
-        this.schematic = null;
-    }
-
-    public CellData(Identifier schematic) {
+    public CellData(String id, File schematic) {
+        this.cellID = id;
         this.schematic = schematic;
     }
 
-    public CellData(Identifier schematic, BlockPos cellOffset) {
-        this.schematic = schematic;
-        this.cellOffset = cellOffset;
+    public boolean update() {
+        boolean updated = false;
+
+        if (schematic.exists()) {
+            if(cellOffset.equals(new BlockPos(0,0,0))) {
+                Wormholes.debug("Updating Schematic Position");
+                Clipboard clipboard = DimensionUtils.loadSchematic(schematic);
+                if (clipboard != null) {
+                    BlockVector3 b3 = clipboard.getMinimumPoint().subtract(clipboard.getOrigin());
+                    cellOffset = new BlockPos(-b3.x(), -b3.y(), -b3.z());
+                    updated = true;
+                }
+            }
+
+            if(spawnOffset.equals(new BlockPos(0,0,0))) {
+                Wormholes.debug("Updating Spawn Position");
+                    spawnOffset = cellOffset.multiply(-1);
+                    updated = true;
+            }
+        }
+        return updated;
     }
 
-    public boolean isEmpty() {
-        return equals(EMPTY);
-    }
-
-    public Identifier getSchematic() { return schematic; }
-
+    public String getCellID() { return cellID; }
     public BlockPos getCellOffset() { return cellOffset; }
+    public BlockPos getSpawnOffset() { return spawnOffset; }
+    public File getSchematic() { return schematic; }
 }

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:overworld",
+  "type": "cobblemon_wormholes:ultra_space",
   "generator": {
     "type": "minecraft:flat",
     "settings": {

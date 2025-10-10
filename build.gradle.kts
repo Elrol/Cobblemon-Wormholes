@@ -32,6 +32,14 @@ repositories {
     maven(url = "https://maven.impactdev.net/repository/development/")
     maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     maven(url = "https://repo.phoenix616.dev")
+    maven(url = "https://maven.enginehub.org/repo/")
+    maven {
+        name = "GeckoLib"
+        url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
 }
 
 dependencies {
@@ -49,6 +57,9 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 
     implementation("com.mysql", "mysql-connector-j","9.2.0")
+
+    modImplementation("com.sk89q.worldedit:worldedit-fabric-mc1.21:7.3.8")
+    modImplementation("software.bernie.geckolib:geckolib-fabric-${project.property("minecraft_version")}:${project.property("geckolib_version")}")
 }
 
 tasks.getByName<Test>("test") {

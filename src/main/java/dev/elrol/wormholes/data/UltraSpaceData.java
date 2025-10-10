@@ -7,34 +7,57 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.elrol.wormholes.events.CellPlacedCallback;
 import dev.elrol.wormholes.libs.DimensionUtils;
 import dev.elrol.wormholes.libs.JsonUtils;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UltraSpaceData {
 
     public static final Codec<UltraSpaceData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.INT.fieldOf("x").forGetter(data -> data.x),
-            Codec.INT.fieldOf("z").forGetter(data -> data.z)
-    ).apply(instance, (x, z) -> {
+            PlacedCellData.CODEC.listOf().fieldOf("placedCellDataList").forGetter(data -> data.placedCellDataList)
+    ).apply(instance, (placedCellDataList) -> {
         UltraSpaceData data = new UltraSpaceData();
-        data.x = x;
-        data.z = z;
+        data.placedCellDataList.addAll(placedCellDataList);
         return data;
     }));
 
     private File dir = null;
     private final String fileName = "wormhole_data.json";
 
-    int x = 0;
-    int z = 0;
+    public List<PlacedCellData> placedCellDataList = new ArrayList<>();
 
     public void init(MinecraftServer server) {
         dir = DimensionUtils.getDimensionDir(server);
         load();
         save();
+    }
+
+    public GridPos calcGridPos(int index) {
+        if(index < 0) return null;
+
+        int m = (int) Math.sqrt(index);
+        int k = index - (m * m);
+
+        int x, z;
+
+        if(k < m) {
+            x = m;
+            z = k;
+        } else {
+            x = k-m;
+            z = m;
+        }
+        return new GridPos(x, z);
+    }
+
+    public GridPos calcNextGridPos() {
+        return calcGridPos(placedCellDataList.size());
     }
 
     public void load() {
@@ -45,9 +68,8 @@ public class UltraSpaceData {
 
         if(result.isSuccess()) {
             UltraSpaceData newData = result.getOrThrow().getFirst();
-
-            x = newData.x;
-            z = newData.z;
+            placedCellDataList.clear();
+            placedCellDataList.addAll(newData.placedCellDataList);
         } else {
             save();
         }
@@ -59,24 +81,22 @@ public class UltraSpaceData {
         JsonUtils.saveToJson(dir, fileName, result.getOrThrow());
     }
 
-    public GridPos getCurrentGridCoords() { return new GridPos(x, z); }
+    public GridPos getCurrentGridCoords() {
+        if(placedCellDataList.isEmpty()) return null;
+        return calcGridPos(placedCellDataList.size() - 1);
+    }
 
-    public GridPos getNextGridCoords() {
-        if(dir == null) return null;
-
-        GridPos pos = new GridPos(x, z);
-
-        if(x > z) {
-            z++;
-            if(x == z) x = 0;
-        } else {
-            if(x == z) z = 0;
-            x++;
-        }
-
+    public void placedCell(String cellID, int cellIndex) {
+        PlacedCellData placedCell = new PlacedCellData(cellID, cellIndex);
+        placedCellDataList.add(placedCell);
+        CellPlacedCallback.EVENT.invoker().placed(placedCell);
         save();
+    }
 
-        return pos;
+    @Nullable
+    public PlacedCellData getPlacedCell(int cellIndex) {
+        if(placedCellDataList.isEmpty() || cellIndex >= placedCellDataList.size()) return null;
+        return placedCellDataList.get(cellIndex);
     }
 
 }

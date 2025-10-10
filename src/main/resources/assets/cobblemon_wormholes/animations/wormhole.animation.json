@@ -1,0 +1,92 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.wormhole.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				},
+				"2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, -360]
+						}
+					}
+				},
+				"3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				},
+				"4": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, -360]
+						}
+					}
+				},
+				"5": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				},
+				"6": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, -360]
+						}
+					}
+				},
+				"7": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				},
+				"8": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, -360]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

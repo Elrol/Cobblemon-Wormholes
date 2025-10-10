@@ -1,6 +1,14 @@
 package dev.elrol.wormholes.data;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 public class GridPos {
+
+    public static final Codec<GridPos> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        Codec.INT.fieldOf("x").forGetter(GridPos::getX),
+        Codec.INT.fieldOf("y").forGetter(GridPos::getY)
+    ).apply(instance, GridPos::new));
 
     int x;
     int y;
