@@ -12,7 +12,6 @@ import dev.elrol.wormholes.commands.argumnets.CellArgumentType;
 import dev.elrol.wormholes.data.CellData;
 import dev.elrol.wormholes.data.PlacedCellData;
 import dev.elrol.wormholes.libs.DimensionUtils;
-import dev.elrol.wormholes.registries.CellRegistry;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;

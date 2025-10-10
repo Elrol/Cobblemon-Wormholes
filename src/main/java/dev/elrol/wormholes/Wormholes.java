@@ -2,10 +2,8 @@ package dev.elrol.wormholes;
 
 import dev.elrol.wormholes.commands.WormholeCommand;
 import dev.elrol.wormholes.commands.argumnets.CellArgumentType;
-import dev.elrol.wormholes.data.CellData;
 import dev.elrol.wormholes.data.UltraSpaceData;
 import dev.elrol.wormholes.entities.WormholeEntity;
-import dev.elrol.wormholes.libs.DimensionUtils;
 import dev.elrol.wormholes.libs.WormholeConstants;
 import dev.elrol.wormholes.registries.CellRegistry;
 import net.fabricmc.api.ModInitializer;
@@ -20,8 +18,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 public class Wormholes implements ModInitializer {
 

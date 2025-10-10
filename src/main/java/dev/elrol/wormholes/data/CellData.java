@@ -3,11 +3,9 @@ package dev.elrol.wormholes.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.fabric.FabricAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import dev.elrol.wormholes.Wormholes;
 import dev.elrol.wormholes.libs.DimensionUtils;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import java.io.File;
