@@ -61,6 +61,7 @@ public class Wormholes implements ModInitializer {
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
             CONFIG = WormholeConfig.load();
             CellRegistry.load();
+            CellRegistry.update();
             ultraSpaceData.load();
             debug("Wormholes Data Reloaded");
         });

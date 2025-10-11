@@ -41,6 +41,17 @@ public class CellRegistry {
         return CELL_DATA_MAP.get(id);
     }
 
+    public static void update() {
+        Map<String, CellData> tempMap = new HashMap<>();
+        CELL_DATA_MAP.forEach((id, cell) -> {
+            if(cell.update()) tempMap.put(id, cell);
+        });
+        if(!tempMap.isEmpty()) {
+            CELL_DATA_MAP.putAll(tempMap);
+            save();
+        }
+    }
+
     public static void load() {
         File[] files = dir.listFiles(s -> s.getName().endsWith(".json"));
         if(schematicDir.mkdir()) {

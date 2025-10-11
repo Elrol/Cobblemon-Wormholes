@@ -43,7 +43,7 @@ public class CellData {
                 Wormholes.debug("Updating Schematic Position");
                 Clipboard clipboard = DimensionUtils.loadSchematic(schematic);
                 if (clipboard != null) {
-                    BlockVector3 b3 = clipboard.getMinimumPoint().subtract(clipboard.getOrigin());
+                    BlockVector3 b3 = clipboard.getOrigin().subtract(clipboard.getMinimumPoint());
                     cellOffset = new BlockPos(-b3.x(), -b3.y(), -b3.z());
                     updated = true;
                 }

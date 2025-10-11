@@ -37,6 +37,7 @@ import java.io.IOException;
 public class DimensionUtils {
 
     private static final BlockState LIGHT_BLOCK = Blocks.LIGHT.getDefaultState().with(LightBlock.LEVEL_15, 15);
+    private static boolean initialCellUpdateCheck = false;
 
     public static ServerWorld getUltraSpace(MinecraftServer server) {
         return server.getWorld(WormholeConstants.ULTRA_SPACE_KEY);
@@ -60,8 +61,13 @@ public class DimensionUtils {
     }
 
     public static int tryPlaceCell(MinecraftServer server, CellData cell) {
+        if(!initialCellUpdateCheck) {
+            CellRegistry.update();
+            initialCellUpdateCheck = true;
+        }
+
         ServerWorld ultraSpaceWorld = DimensionUtils.getUltraSpace(server);
-        ultraSpaceWorld.getChunk(cell.getCellOffset());
+        //ultraSpaceWorld.getChunk(cell.getCellOffset());
 
         UltraSpaceData spaceData = Wormholes.ultraSpaceData;
         int nextCellIndex = spaceData.placedCellDataList.size();
@@ -72,13 +78,9 @@ public class DimensionUtils {
             return -1;
         }
 
-        if(cell.update()) {
-            CellRegistry.registerCell(cell);
-            CellRegistry.save();
-        }
-
-        BlockPos targetLocation = getCellOrigin(gridPos);
-        targetLocation.add(cell.getCellOffset());
+        BlockPos targetLocation = getCellOrigin(gridPos).subtract(cell.getCellOffset());
+        //BlockPos targetLocation = getCellOrigin(gridPos);
+        Wormholes.debug("Target Location = {}", targetLocation);
 
         if(placeSchematic(ultraSpaceWorld, cell.getSchematic(), targetLocation)) {
             Wormholes.debug("Generating Structure at: {}", targetLocation.toShortString());
@@ -95,16 +97,19 @@ public class DimensionUtils {
         int cellSize = config.dimensions.getCellSize();
         int blocksBetween = config.dimensions.getChunksBetweenCells() * 16;
 
-        return new BlockPos(
+        BlockPos pos = new BlockPos(
                 (cellSize * gridPos.getX()) + (blocksBetween * gridPos.getX()),
                 config.dimensions.getCellElevation(),
                 (cellSize * gridPos.getY()) + (blocksBetween * gridPos.getY())
         );
+        Wormholes.debug("Cell Origin = {}", pos);
+        return pos;
     }
 
     public static BlockPos getCellPlayerSpawn(CellData cell, GridPos gridPos) {
-        BlockPos origin = getCellOrigin(gridPos);
-        return origin.add(cell.getSpawnOffset());
+        BlockPos origin = getCellOrigin(gridPos).add(cell.getSpawnOffset());
+        Wormholes.debug("Player Spawn = {}", origin);
+        return origin;
     }
 
     public static boolean placeSchematic(ServerWorld world, File file, BlockPos origin) {
@@ -119,6 +124,8 @@ public class DimensionUtils {
             BlockVector3 max = clipboard.getMaximumPoint();
             BlockVector3 min = clipboard.getMinimumPoint();
             BlockVector3 playerOrigin = clipboard.getOrigin();
+
+            //clipboard.setOrigin(clipboard.getMinimumPoint());
 
             Operation operation = new ClipboardHolder(clipboard)
                     .createPaste(editSession)
