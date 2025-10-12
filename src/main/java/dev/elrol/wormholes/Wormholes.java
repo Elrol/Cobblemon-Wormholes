@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.entity.EntityType;
@@ -58,17 +57,11 @@ public class Wormholes implements ModInitializer {
     }
 
     private void registerEvents() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            WormholeCommand.register(dispatcher);
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> WormholeCommand.register(dispatcher));
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            ultraSpaceData.init(server);
-        });
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> ultraSpaceData.init(server));
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-            ultraSpaceData.save();
-        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> ultraSpaceData.save());
 
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
             CONFIG = WormholeConfig.load();
@@ -148,12 +141,6 @@ public class Wormholes implements ModInitializer {
         entity.setPosition(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f);
         world.spawnEntity(entity);
         debug("Spawned wormhole: {}", pos);
-    }
-
-    private static void registerDataFixer() {
-        int currentDataVersion = SharedConstants.WORLD_VERSION;
-
-
     }
 
     public static void debug(String message) {
