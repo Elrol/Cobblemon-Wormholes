@@ -5,12 +5,17 @@ import dev.elrol.wormholes.data.PlacedCellData;
 import dev.elrol.wormholes.libs.DimensionUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
@@ -69,7 +74,7 @@ public class WormholeEntity extends Entity implements GeoEntity {
             wormholeIndex = nbt.getInt("wormholeIndex");
 
         if(!getWorld().isClient && !spawned) {
-            DimensionUtils.updateLight(getWorld(), getBlockPos().up(2));
+            DimensionUtils.updateLight(getWorld(), getBlockPos().down(2));
             spawned = true;
         }
     }
@@ -96,7 +101,7 @@ public class WormholeEntity extends Entity implements GeoEntity {
 
     @Override
     public void onRemoved() {
-        DimensionUtils.removeLight(getWorld(), getBlockPos().up(2));
+        DimensionUtils.removeLight(getWorld(), getBlockPos().down(2));
         super.onRemoved();
     }
 }

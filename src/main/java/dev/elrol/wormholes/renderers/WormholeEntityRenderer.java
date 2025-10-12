@@ -21,7 +21,7 @@ public class WormholeEntityRenderer extends GeoEntityRenderer<WormholeEntity> {
     public void preRender(MatrixStack poseStack, WormholeEntity animatable, BakedGeoModel model, @Nullable VertexConsumerProvider bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
-        float scale = Wormholes.CONFIG.wormholeScale;
+        float scale = Wormholes.CONFIG.entity.wormholeScale;
         poseStack.scale(scale, scale, scale);
     }
 }
