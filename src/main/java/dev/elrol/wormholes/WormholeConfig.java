@@ -132,5 +132,13 @@ public class WormholeConfig {
         public int getSpawnHeight() {
             return spawnHeight;
         }
+
+        public int getWormholeSize() {
+            return Math.round(wormholeScale * 5);
+        }
+
+        public int getWormholeRadius() {
+            return Math.round((getWormholeSize() - 1.0f) / 2.0f);
+        }
     }
 }

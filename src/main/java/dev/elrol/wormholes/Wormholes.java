@@ -103,19 +103,19 @@ public class Wormholes implements ModInitializer {
         int spawnDistance = entityConfig.getMinSpawnRadius() + rand.nextInt(entityConfig.getMaxSpawnRadius() - entityConfig.getMinSpawnRadius());
         double angle = rand.nextDouble() * 2 * Math.PI;
 
-        int wormholeSize = Math.round(entityConfig.getWormholeScale() * 5);
-        int posOffset = Math.round((wormholeSize - 1.0f) / 2.0f);
+        int wormholeSize = CONFIG.entity.getWormholeSize();
+        int posOffset = CONFIG.entity.getWormholeRadius();
 
         int x = (int) (player.getX() + spawnDistance * Math.cos(angle));
         int z = (int) (player.getZ() + spawnDistance * Math.sin(angle));
 
-        int groundY = world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z) + entityConfig.getSpawnHeight() + posOffset;
+        int groundY = world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z) + entityConfig.getSpawnHeight();
 
         BlockPos spawnPos = new BlockPos(x, groundY, z);
 
         boolean isEmpty = true;
 
-        BlockPos origin = spawnPos.subtract(new BlockPos(posOffset, posOffset, posOffset));
+        BlockPos origin = spawnPos.subtract(new BlockPos(posOffset, 0, posOffset));
 
         debug("Attempting to spawn a wormhole: {} : {}", spawnPos, world.getBlockState(spawnPos));
         debug("Offset Origin: {} : posOffset: {}", origin, posOffset);
